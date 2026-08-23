@@ -87,12 +87,12 @@
         "type": "string",
         "pattern": "^[^/\\\\]+$"
       },
-      "description": "Executable basenames that identify this game, for a page that has no store identity at all - a correction to somebody else's wrong row, say. This is the only case where nothing can be derived, and therefore the only case where a gamedb id is minted."
+      "description": "Executable basenames that identify this game, observed without knowing which store's copy was running - a launcher that reports the process but not the store, say. A store entry carries its own exe where the store IS known. A page may have both. For a page with no store identity at all this is the only thing that identifies it, and the only case where a gamedb id is minted."
     },
     "stores": {
       "type": "object",
       "minProperties": 1,
-      "description": "Keyed by umu's own store spelling. Omitted only by a page identified purely by executable.",
+      "description": "Keyed by umu's own store spelling. Omitted only by a page that has no store identity and is identified by executable alone.",
       "propertyNames": {
         "enum": [
           "steam",

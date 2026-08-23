@@ -105,7 +105,7 @@ Unknown fields are an error, so the list below is the whole vocabulary.
 | `year` | no | Release year. Useful when two different games share a title, never required. |
 | `note` | no | Free prose. Why this page exists, what was checked, what is still unknown. |
 | `ids` | no | Identifiers in other people's namespaces, recorded as facts. |
-| `exe` | no | Executable basenames that identify this game. Only for a page with no store identity at all. |
+| `exe` | no | Executable basenames seen without knowing which store's copy ran. A page may have these and store entries both; a store entry carries its own `exe` where the store is known. |
 | `stores` | no | Store entries, keyed by store. |
 | `variant_of` | no | The base game's canonical id, when this page is a separately sold product (a remaster, a definitive edition). |
 | `merged_from` | no | Ids this page absorbed when two pages turned out to be one game. |
