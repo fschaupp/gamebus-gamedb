@@ -244,9 +244,11 @@ over through `[ids]`, which is what it is for.
 
 ## 4. Run the checks
 
-From the repository root:
+The lint is `gamedb-lint`, built in gamebus-presenced and published there as a
+release. `.github/workflows/lint.yml` names the release it pins; take the
+binary from that release and run it at the repository root:
 
-    .scripts/gamedb-lint.py gamedb
+    gamedb-lint .
 
 It validates both schemas, the id rules, and the one-game-one-page rule across
 the whole set, and exits non-zero when anything fails. That exit status is what
@@ -255,13 +257,11 @@ before you open the PR".
 
     OK: 2 pages + helpers valid
 
-`.scripts/gamedb-lint-selftest.sh` checks the lint itself against a fixture set
-carrying one page per rule. Run it if you changed the lint; it is not something
-a data contribution needs.
+If you would rather not fetch a binary, open the pull request and read the
+result: the same lint runs there and its report lands in the job summary.
 
-Formatting is `taplo fmt --check`, so nobody argues about spacing in review.
-If you do not have taplo, copy the layout of an existing page and a reviewer
-will sort out the rest.
+Formatting: copy the layout of an existing page and a reviewer will sort out
+the rest.
 
 ## 5. What the failures mean
 

@@ -212,17 +212,19 @@ is caught before a human reads it.
 
 ## Checking the data
 
-    .scripts/gamedb-lint.py [directory]
+The checks are not kept here. `gamedb-lint` and `gamedb-build` are built in
+gamebus-presenced and published there as a release, and this repository's
+workflows download one pinned version, check its digest, and run it. That keeps
+this repository data only, and it keeps the schema and the tool that enforces
+it changing in step: bumping the pin is an ordinary pull request.
 
-validates the whole set: both schemas, the id rules, and the one-game-one-page
-rule. It exits non-zero when anything fails, which is what a merge request is
-gated on. `.scripts/gamedb-lint-selftest.sh` checks the lint itself against a
-fixture set carrying one page per rule.
+To run the lint yourself, take `gamedb-lint` from the release the workflow pins
+and point it at the repository root:
 
-Both live outside this directory on purpose. When this becomes its own
-repository the checks are downloaded as a pinned release rather than vendored,
-so the data set stays data only. The Python is a stand-in until the Rust lint
-exists.
+    gamedb-lint .
+
+It validates both schemas, the id rules, and the one-game-one-page rule, and
+exits non-zero when anything fails, which is what a merge is gated on.
 
 ## Built artifacts
 

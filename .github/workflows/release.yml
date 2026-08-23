@@ -1,0 +1,134 @@
+# Build the artifacts from the pages and publish them as release assets.
+#
+# The built forms are never committed: the TOML pages are the source of truth
+# and the artifacts are a function of them, so they exist only here, hanging
+# off a tag. The builder is fetched the same way the lint is, pinned by
+# release and digest, and it is built from gamebus-presenced, not here.
+#
+# A manual run builds and verifies without publishing. Give it a tag name to
+# attach the artifacts to an existing release instead.
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to upload the artifacts to. Leave empty to build and verify only."
+        required: false
+        default: ""
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  TOOLS_REPO: fschaupp/gamebus-presenced
+  TOOLS_TAG: ""
+  LINT_SHA256: ""
+  BUILD_SHA256: ""
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the pinned tools
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          if [ -z "$TOOLS_TAG" ] || [ -z "$LINT_SHA256" ] || [ -z "$BUILD_SHA256" ]; then
+            echo "::error::no tools release is pinned yet: set TOOLS_TAG, LINT_SHA256 and BUILD_SHA256 in .github/workflows/release.yml"
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/tools"
+          gh release download "$TOOLS_TAG" --repo "$TOOLS_REPO" \
+            --pattern gamedb-lint --pattern gamedb-build --dir "$RUNNER_TEMP/tools"
+          printf '%s  %s\n%s  %s\n' \
+            "$LINT_SHA256" "$RUNNER_TEMP/tools/gamedb-lint" \
+            "$BUILD_SHA256" "$RUNNER_TEMP/tools/gamedb-build" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/tools/gamedb-lint" "$RUNNER_TEMP/tools/gamedb-build"
+
+      # Publishing a condensed form of data that does not pass the merge gate
+      # would ship a contradiction.
+      - name: Gate
+        run: '"$RUNNER_TEMP/tools/gamedb-lint" .'
+
+      - name: Build
+        run: |
+          set -eu
+          rm -rf build
+          "$RUNNER_TEMP/tools/gamedb-build" --data . --out build/ --commit "$GITHUB_SHA"
+
+      - name: Verify
+        run: |
+          set -eu
+          missing=0
+          for f in identities.json identities.parquet identities.sqlite \
+                   shared-helpers.txt manifest.toml; do
+            if [ ! -s "build/$f" ]; then
+              echo "::error::the builder did not produce build/$f, or produced it empty"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          tracked=$(git ls-files -- build)
+          if [ -n "$tracked" ]; then
+            echo "::error::build output is tracked in git and must not be: $tracked"
+            exit 1
+          fi
+          {
+            echo "## gamedb artifacts"
+            echo
+            echo "Built from \`$GITHUB_SHA\` with $TOOLS_REPO $TOOLS_TAG."
+            echo
+            echo '```'
+            (cd build && sha256sum ./*)
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: gamedb-artifacts
+          path: build/
+          if-no-files-found: error
+          retention-days: 14
+
+  # Split from the build so that write access exists only where it is used.
+  publish:
+    needs: build
+    if: ${{ github.event_name == 'push' || inputs.tag != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: gamedb-artifacts
+          path: build
+
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -eu
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes \
+              build/identities.json build/identities.parquet build/identities.sqlite \
+              build/shared-helpers.txt build/manifest.toml
+          else
+            gh release upload "$TAG" --clobber \
+              build/identities.json build/identities.parquet build/identities.sqlite \
+              build/shared-helpers.txt build/manifest.toml
+          fi

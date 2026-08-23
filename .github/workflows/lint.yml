@@ -1,0 +1,98 @@
+# Gate every change to the data set on the lint that guards it.
+#
+# This repository is data only. The lint is not vendored here: it is built
+# from gamebus-presenced and published there as a release, and this workflow
+# downloads one pinned version, checks its digest, and runs it. Bumping the
+# pin is an ordinary pull request, reviewed like any other change.
+#
+# Until the first tools release exists the pin below is empty and this job
+# fails with a message saying so, rather than passing on nothing.
+
+name: Lint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: {}
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The gamebus-presenced release carrying gamedb-lint, and that binary's
+  # sha256. Both come from the release page; both change together.
+  TOOLS_REPO: fschaupp/gamebus-presenced
+  TOOLS_TAG: ""
+  LINT_SHA256: ""
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the pinned lint
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          if [ -z "$TOOLS_TAG" ] || [ -z "$LINT_SHA256" ]; then
+            echo "::error::no tools release is pinned yet: set TOOLS_TAG and LINT_SHA256 in .github/workflows/lint.yml to a gamedb-tools release of $TOOLS_REPO"
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/tools"
+          gh release download "$TOOLS_TAG" --repo "$TOOLS_REPO" \
+            --pattern gamedb-lint --dir "$RUNNER_TEMP/tools"
+          echo "$LINT_SHA256  $RUNNER_TEMP/tools/gamedb-lint" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/tools/gamedb-lint"
+
+      # The failure a contributor actually hits, two pages claiming one
+      # identifier, is a sentence they need to read, so the report lands in
+      # the job summary and not only in the log.
+      - name: Validate the data set
+        run: |
+          set -u
+          out="$RUNNER_TEMP/lint.out"
+          status=0
+          "$RUNNER_TEMP/tools/gamedb-lint" . > "$out" 2>&1 || status=$?
+          cat "$out"
+          {
+            echo "## gamedb lint"
+            echo
+            if [ "$status" -eq 0 ]; then
+              echo "The data set validates."
+            else
+              echo "**The data set does not validate.** Every line below has to be"
+              echo "resolved before this can merge."
+            fi
+            echo
+            echo '```'
+            cat "$out"
+            echo '```'
+            if grep -q 'the same game cannot live on two pages' "$out"; then
+              echo
+              echo "### Two pages claim one identifier"
+              echo
+              echo "A game lives on exactly one page, and every identifier a page"
+              echo "carries resolves to that one page. The usual cause is adding a"
+              echo "second page for a game that is already here under another store."
+              echo
+              echo "Move the new store entry onto the page that already exists and"
+              echo "drop the new file. Do not rename an id to dodge the collision:"
+              echo "ids are frozen once assigned."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          while IFS= read -r line; do
+            case "$line" in
+              "") ;;
+              "OK:"*) ;;
+              "warning: "*) echo "::warning::${line#warning: }" ;;
+              *) [ "$status" -eq 0 ] || echo "::error::$line" ;;
+            esac
+          done < "$out"
+          exit "$status"
