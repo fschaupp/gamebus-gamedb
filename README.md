@@ -240,3 +240,10 @@ bloat the repository permanently.
 
 Builds are deterministic: sorted, fixed field order, no build timestamp inside
 the data.
+
+Releases are dated, not versioned: `v2026.08.23`, with a `.1`, `.2` suffix for
+a second release on the same day. A data set has no API surface to be
+semantic about, and a date answers "how old is my copy?" at a glance.
+`.scripts/release.sh` gates with the pinned tools and tags; pushing the tag is
+what builds and publishes. `.scripts/update-tools.sh` moves the tool pin to
+the latest release, proving it on this data first.
