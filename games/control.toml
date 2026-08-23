@@ -16,3 +16,10 @@ seen = "2026-08-15"
 source = "heroic-config"
 confidence = "high"
 note = "Heroic writes the app name capitalized; Lutris matches it case-sensitively."
+
+[[stores.gog]]
+codename = "2049187585"
+exe = "Control_DX12.exe"
+seen = "2026-08-07"
+source = "manual"
+confidence = "high"

@@ -1,0 +1,11 @@
+title = "Star Wars Outlaws"
+gamedb = "steam-2842040"
+note = """
+No protonfix upstream (checked 2026-08-23), so umu-database does not \
+want this game and it has no umu id."""
+exe = ["Outlaws.exe"]
+
+[ids]
+steam = 2842040
+source = "steam-sku"
+seen = "2026-08-22"
