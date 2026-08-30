@@ -1,0 +1,16 @@
+title = "Diablo IV"
+gamedb = "steam-2344520"
+note = """
+No protonfix upstream (checked 2026-08-30), so umu-database does not \
+want this game and it has no umu id."""
+
+[ids]
+steam = 2344520
+source = "steam-sku"
+seen = "2026-08-30"
+
+[[stores.battlenet]]
+codename = "fenris"
+seen = "2026-08-30"
+source = "lutris"
+confidence = "high"
