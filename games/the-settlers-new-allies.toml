@@ -1,0 +1,17 @@
+title = "The Settlers: New Allies"
+gamedb = "steam-2750080"
+note = """
+No protonfix upstream (checked 2026-08-30), so umu-database does not \
+want this game and it has no umu id."""
+
+[ids]
+steam = 2750080
+source = "steam-sku"
+seen = "2026-08-30"
+
+[[stores.ubisoft]]
+codename = "96e3caa3-42c6-4f39-99c6-dc9923d30db3"
+exe = "The_Settlers.exe"
+seen = "2026-08-30"
+source = "lutris"
+confidence = "high"
