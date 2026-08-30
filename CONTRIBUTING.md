@@ -147,6 +147,9 @@ special case for the single-entry shape.
 | `edition` | no | Which edition this product is, when a store sells more than one of the same game (`Standard`, `Deluxe`, `Game of the Year`). |
 | `note` | no | Free prose. |
 
+An `itchio` codename is the itch.io game id (Lutris's `service_id`), not the
+Lutris slug.
+
 `source` is one of:
 
 | Value | Where the value came from |
