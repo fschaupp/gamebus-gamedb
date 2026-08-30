@@ -157,6 +157,7 @@ Lutris slug.
 | `heroic-config` | Heroic's own configuration for the installed game |
 | `heroic-library` | Heroic's library listing |
 | `lutris` | Lutris, its local database or its API |
+| `steam` | Steam itself, such as the install's own appmanifest |
 | `detectable` | Discord's detectable list |
 | `gog-catalog` | GOG's catalog |
 | `egdata` | egdata |
