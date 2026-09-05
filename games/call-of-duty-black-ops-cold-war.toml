@@ -9,3 +9,10 @@ exe = ["BlackOpsColdWar.exe"]
 steam = 1985810
 source = "steam-sku"
 seen = "2026-08-22"
+
+[[stores.battlenet]]
+codename = "zeus"
+exe = "BlackOpsColdWar.exe"
+seen = "2026-08-30"
+source = "lutris"
+confidence = "high"

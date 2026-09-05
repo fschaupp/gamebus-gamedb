@@ -1,0 +1,16 @@
+title = "Call of Duty: Modern Warfare"
+gamedb = "steam-2000950"
+note = """
+No protonfix upstream (checked 2026-09-05), so umu-database does not \
+want this game and it has no umu id."""
+
+[ids]
+steam = 2000950
+source = "steam-sku"
+seen = "2026-08-30"
+
+[[stores.battlenet]]
+codename = "odin"
+seen = "2026-08-30"
+source = "lutris"
+confidence = "high"

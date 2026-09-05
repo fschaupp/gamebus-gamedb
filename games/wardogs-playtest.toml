@@ -1,0 +1,9 @@
+title = "WARDOGS Playtest"
+gamedb = "steam-4809930"
+note = "Identified from Steam's app manifest: appid=4809930."
+
+[[stores.steam]]
+codename = "4809930"
+seen = "2026-09-05"
+source = "steam"
+confidence = "high"

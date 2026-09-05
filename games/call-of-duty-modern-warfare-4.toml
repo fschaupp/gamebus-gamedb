@@ -1,0 +1,11 @@
+title = "Call of Duty: Modern Warfare 4"
+gamedb = "steam-4435490"
+note = """
+No protonfix upstream (checked 2026-09-05), so umu-database does not \
+want this game and it has no umu id."""
+exe = ["cod.exe"]
+
+[ids]
+steam = 4435490
+source = "steam-sku"
+seen = "2026-08-30"
