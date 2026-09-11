@@ -1,0 +1,9 @@
+title = "ISLANDS: Non-Places"
+gamedb = "itchio-76416"
+note = "Identified from Lutris: service=itchio, appid=76416."
+
+[[stores.itchio]]
+codename = "76416"
+seen = "2026-09-11"
+source = "lutris"
+confidence = "high"

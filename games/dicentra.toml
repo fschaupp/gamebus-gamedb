@@ -1,0 +1,9 @@
+title = "Dicentra"
+gamedb = "itchio-2020897"
+note = "Identified from Lutris: service=itchio, appid=2020897."
+
+[[stores.itchio]]
+codename = "2020897"
+seen = "2026-09-11"
+source = "lutris"
+confidence = "high"
