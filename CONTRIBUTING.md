@@ -132,9 +132,11 @@ the whole table.
 
 ### `[[stores.<store>]]`
 
-Store keys use umu's own spelling: `steam`, `gog`, `egs`, `ubisoft`,
-`zoomplatform`, `humble`, `itchio`, `amazon`, `battlenet`, `ea`, `umu`. Store
-entries are always arrays, even for a single entry, so a consumer never needs a
+Store keys use umu's own spelling, and the stores that exist are the ones
+`stores.toml` lists (except `none`, which is umu-database's word for no store:
+a page with no store identity omits `stores` instead). A new store is added
+there, with any other spellings launchers use for it; the lint holds the page
+schema to that list. Store entries are always arrays, even for a single entry, so a consumer never needs a
 special case for the single-entry shape.
 
 | Field | Required | What it is |
@@ -219,7 +221,7 @@ precedence, first match wins:
 |---|---|
 | `steam-870780` | the Steam app id, when the game is on Steam |
 | `umu-870780` | the umu id, when the game really is in umu-database |
-| `gog-1660194629`, `egs-Calluna` | a store codename, taking stores in the order gog, egs, ubisoft, ea, battlenet, amazon, humble, itchio, zoomplatform |
+| `gog-1660194629`, `egs-Calluna` | a store codename, taking stores in the order `id_precedence` in `stores.toml` gives |
 | `gamedb-k7m2p9qz` | minted here, when nothing above names the game |
 
 **The prefix names the namespace the identifier belongs to, and nothing parses

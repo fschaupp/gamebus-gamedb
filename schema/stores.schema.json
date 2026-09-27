@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/game-corrections/stores.schema.json",
+  "title": "Stores",
+  "description": "The stores gamebus knows, in umu-database's spelling, with the other spellings launchers use. The page schema's store keys must equal the ids here that are not standalone.",
+  "type": "object",
+  "required": ["id_precedence", "store"],
+  "additionalProperties": false,
+  "properties": {
+    "id_precedence": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Stores whose codename lends a page its canonical id, best first. Each must be a store listed below.",
+      "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}
+    },
+    "store": {
+      "type": "array",
+      "minItems": 1,
+      "description": "In the order a picker offers them.",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "description": "umu-database's spelling."
+          },
+          "aliases": {
+            "type": "array",
+            "uniqueItems": true,
+            "description": "Other spellings launchers use for this store, lowercase.",
+            "items": {"type": "string", "pattern": "^[a-z0-9_]+$"}
+          },
+          "pick": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether a store picker offers it."
+          },
+          "standalone": {
+            "type": "boolean",
+            "default": false,
+            "description": "umu-database's word for no store. Never a page key."
+          }
+        }
+      }
+    }
+  }
+}
