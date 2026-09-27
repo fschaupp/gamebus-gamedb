@@ -28,9 +28,9 @@ concurrency:
 
 env:
   TOOLS_REPO: fschaupp/gamebus-presenced
-  TOOLS_TAG: "gamedb-tools-v0.1.2"
-  LINT_SHA256: "ade0e69a9b0fb4deb69a105a35df79629a105704415aa4a34a9b3daa7a149f57"
-  BUILD_SHA256: "a976a216eabf518d843d1dbb1a7dbb75d0e3cba8957b91b1923a7fd472985553"
+  TOOLS_TAG: "gamedb-tools-v0.2.0"
+  LINT_SHA256: "40583845b65ecd3b8157fd88e620451b8707da230c4d8712b817cb4b98691a0b"
+  BUILD_SHA256: "78650b5c545adfdd482b562c86ef9c5b717c233a4b2260a4a3f701b5feb15b83"
 
 jobs:
   build:

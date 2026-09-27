@@ -25,8 +25,8 @@ env:
   # The gamebus-presenced release carrying gamedb-lint, and that binary's
   # sha256. Both come from the release page; both change together.
   TOOLS_REPO: fschaupp/gamebus-presenced
-  TOOLS_TAG: "gamedb-tools-v0.1.2"
-  LINT_SHA256: "ade0e69a9b0fb4deb69a105a35df79629a105704415aa4a34a9b3daa7a149f57"
+  TOOLS_TAG: "gamedb-tools-v0.2.0"
+  LINT_SHA256: "40583845b65ecd3b8157fd88e620451b8707da230c4d8712b817cb4b98691a0b"
 
 jobs:
   lint:
