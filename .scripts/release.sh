@@ -37,6 +37,17 @@ if [ -z "$tools_tag" ] || [ -z "$lint_sha" ] || [ -z "$build_sha" ]; then
     echo "            run ./.scripts/update-tools.sh first" >&2
     exit 1
 fi
+# stores.toml is only validated by gamedb-tools 0.2.0 and newer; an older pin
+# would build an invalid store list without a word.
+case "$tools_tag" in
+gamedb-tools-v0.[01].*)
+    if [ -f stores.toml ]; then
+        echo "release.sh: stores.toml needs gamedb-tools-v0.2.0 or newer, $tools_tag is pinned" >&2
+        echo "            run ./.scripts/update-tools.sh first" >&2
+        exit 1
+    fi
+    ;;
+esac
 
 if [ $# -eq 1 ]; then
     tag=$1

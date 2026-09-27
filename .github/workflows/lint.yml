@@ -36,6 +36,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # stores.toml is only validated by gamedb-tools 0.2.0 and newer. An
+      # older pin would wave an invalid store list through unchecked.
+      - name: Require tools that check stores.toml
+        run: |
+          set -eu
+          if [ -f stores.toml ]; then
+            case "$TOOLS_TAG" in
+              gamedb-tools-v0.[01].*)
+                echo "::error::stores.toml is only validated by gamedb-tools-v0.2.0 or newer, and $TOOLS_TAG is pinned: run ./.scripts/update-tools.sh"
+                exit 1 ;;
+            esac
+          fi
+
       - name: Fetch the pinned lint
         env:
           GH_TOKEN: ${{ github.token }}

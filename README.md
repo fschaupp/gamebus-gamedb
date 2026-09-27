@@ -17,6 +17,8 @@ nowhere else to live.
 
     games/<slug>.toml   one page per GAME, stores nested inside
     helpers.toml        executables that can never identify a game
+    stores.toml         the stores gamebus knows, and launchers' other
+                        spellings for them
     schema/             JSON Schema for both, applied to the parsed TOML
 
 ## Ids
@@ -27,9 +29,8 @@ only where none does:
 
     steam-870780      a Steam app id, when the game is on Steam
     umu-870780        the umu id, when the game really is in umu-database
-    gog-1660194629    a store codename, taking stores in the order gog, egs,
-    egs-Calluna       ubisoft, ea, battlenet, amazon, humble, itchio,
-                      zoomplatform
+    gog-1660194629    a store codename, taking stores in the order
+    egs-Calluna       `id_precedence` in stores.toml gives
     gamedb-k7m2p9qz   minted here, when nothing above names the game
 
 In that order of precedence. The field may be **omitted whenever it is
